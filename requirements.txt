@@ -10,3 +10,4 @@ yarg==0.1.10
 fastapi
 uvicorn
 pydantic
+ortools>=9.7
