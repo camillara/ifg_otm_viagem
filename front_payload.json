@@ -1,0 +1,122 @@
+{
+  "rota": {
+    "origem": "GYN",
+    "destino": "RIO",
+    "caminho": [
+      "GYN",
+      "GRU",
+      "JFK",
+      "ATL"
+    ],
+    "trechos": [
+      {
+        "origem": "GYN",
+        "destino": "GRU",
+        "voo": {
+          "id": "G31497_2026_03_07_06:15",
+          "cia": "",
+          "codigo": "",
+          "data": "",
+          "saida": "",
+          "duracao_min": null,
+          "preco": 0.0
+        }
+      },
+      {
+        "origem": "GRU",
+        "destino": "JFK",
+        "voo": {
+          "id": "AV248_2026_03_12_01:20",
+          "cia": "",
+          "codigo": "",
+          "data": "",
+          "saida": "",
+          "duracao_min": null,
+          "preco": 0.0
+        }
+      },
+      {
+        "origem": "JFK",
+        "destino": "ATL",
+        "voo": {
+          "id": "F94817_2026_03_16_06:00",
+          "cia": "",
+          "codigo": "",
+          "data": "",
+          "saida": "",
+          "duracao_min": null,
+          "preco": 0.0
+        }
+      }
+    ]
+  },
+  "custos": {
+    "total": 2878.42,
+    "voos": 0.0,
+    "hospedagem": 1938.32,
+    "alimentacao": 940.1,
+    "transporte": 0.0
+  },
+  "detalhes": {
+    "hospedagem": [
+      {
+        "cidade": "ATL",
+        "diarias": 2,
+        "diaria": 678.66,
+        "total": 1357.32
+      },
+      {
+        "cidade": "GRU",
+        "diarias": 3,
+        "diaria": 147.0,
+        "total": 441.0
+      },
+      {
+        "cidade": "GYN",
+        "diarias": 2,
+        "diaria": 70.0,
+        "total": 140.0
+      }
+    ],
+    "alimentacao": [
+      {
+        "cidade": "ATL",
+        "diarias": 2,
+        "custo_dia": 274.3,
+        "total": 548.6
+      },
+      {
+        "cidade": "GRU",
+        "diarias": 3,
+        "custo_dia": 90.5,
+        "total": 271.5
+      },
+      {
+        "cidade": "GYN",
+        "diarias": 2,
+        "custo_dia": 60.0,
+        "total": 120.0
+      }
+    ],
+    "transporte": [
+      {
+        "cidade": "ATL",
+        "diarias": 2,
+        "custo_dia": 0.0,
+        "total": 0.0
+      },
+      {
+        "cidade": "GRU",
+        "diarias": 3,
+        "custo_dia": 0.0,
+        "total": 0.0
+      },
+      {
+        "cidade": "GYN",
+        "diarias": 2,
+        "custo_dia": 0.0,
+        "total": 0.0
+      }
+    ]
+  }
+}
