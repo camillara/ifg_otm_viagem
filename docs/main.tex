@@ -1,0 +1,132 @@
+% ============================================
+% Modelo MILP de Roteiro de Viagem (Somente Avião)
+% Versões:
+% (A) Tempo como dado (matriz T_{ij})
+% (B) Tempo com agenda: hora de saída + duração (voos discretos) + chegada
+% Dias por cidade como variável de decisão
+% ============================================
+
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+
+\title{Modelo de Otimização Inteira Mista para Roteiro de Viagem}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Modelo de Agenda de voos (hora de saída + duração) e tempo de chegada}
+
+\subsection{Parâmetros do Modelo}
+\begin{itemize}
+  \item $F_{i,j}$: conjunto de voos candidatos da cidade $i$ para $j$.
+  \item $\mathrm{DEP}_{i,j,f}$: hor\'ario (timestamp) de partida do voo $f\in F_{i,j}$.
+  \item $\mathrm{DUR}_{i,j,f}$: dura\c{c}\~ao do voo $f\in F_{i,j}$.
+  \item $C_{i,j,f}$: custo do voo $f\in F_{i,j}$.
+  \item $\tau$: horas por dia (tipicamente $\tau=24$).
+  \item $M$: constante Big-$M$ (escolher $\ge$ horizonte m\'aximo).
+\end{itemize}
+
+\subsection{Vari\'aveis espec\'ificas do Modelo (B)}
+\begin{itemize}
+  \item $x_{i,j,f}\in\{0,1\}$: 1 se o voo $f\in F_{i,j}$ \'e usado no trecho $i\to j$.
+  \item $t_i\ge 0$: instante de chegada/início de permanência na cidade $i$.
+  \item $X_{i,j} \in [0,1]$: arco agregado, definido por $X_{i,j}=\sum_{f\in F_{i,j}} x_{i,j,f}$.
+  \item $d_{i} \in \mathbb{R}_{\ge 0}$: quantidade de dias contínuo
+  \item $dias_{i} \in \mathbb{Z}_{\ge 0}$: quantidade de dias discreto
+\end{itemize}
+
+
+\subsection{Fun\c{c}\~oes objetivo}
+\paragraph{Custo}
+\begin{equation}
+\label{eq:custoB}
+\text{CUSTO}=
+\sum_{i\in V}\sum_{\substack{j\in V\\ j\neq i}}\sum_{f\in F_{i,j}} C_{i,j,f}\,x_{i,j,f}
++\sum_{i\in V} C^{hotel}_i\, dias_i
++\sum_{i\in V} C^{food}_i\,(n_A+\alpha n_C)\, dias_i + \sum_{i} C_{i}^{transfer} \cdot y_{i} 
+\end{equation}
+
+\paragraph{Tempo (em voo)}
+\begin{equation}
+\label{eq:tempoB}
+\text{TEMPO}=
+\sum_{i\in V}\sum_{\substack{j\in V\\ j\neq i}}\sum_{f\in F_{i,j}} \mathrm{DUR}_{i,j,f}\,x_{i,j,f}.
+\end{equation}
+
+\subsection{Restri\c{c}\~oes}
+\paragraph{Início e fim (rota aberta)}
+\begin{align}
+\sum_{i\in V} s_i &= 1, &
+\sum_{i\in V} e_i &= 1, \label{eq:startendB1}\\
+s_i &\le y_i, &
+e_i &\le y_i \qquad \forall i\in V. \label{eq:startendB2}
+\end{align}
+
+\paragraph{Defini\c{c}\~ao do arco agregado e no m\'aximo um voo por par origem destino}
+\begin{align}
+X_{i,j} &= \sum_{f\in F_{i,j}} x_{i,j,f} \qquad \forall i,j\in V,\; i\neq j, \label{eq:aggB1}\\
+\sum_{f\in F_{i,j}} x_{i,j,f} &\le 1 \qquad \forall i,j\in V,\; i\neq j. \label{eq:aggB2}
+\end{align}
+
+\paragraph{Conservação de fluxo (entrada/sa\'ida por cidade)}
+\begin{align}
+\sum_{\substack{j\in V\\ j\neq i}} X_{j,i} &= y_i - s_i \qquad \forall i\in V, \label{eq:flowBin}\\
+\sum_{\substack{j\in V\\ j\neq i}} X_{i,j} &= y_i - e_i \qquad \forall i\in V. \label{eq:flowBout}
+\end{align}
+
+\paragraph{Eliminação de subtours (MTZ) em $X_{i,j}$}
+\begin{align}
+u_i - u_j + |V|\,X_{i,j} &\le |V|-1 \qquad \forall i,j\in V,\; i\neq j, \label{eq:mtzB1}\\
+0 \le u_i &\le |V|\,y_i \qquad \forall i\in V. \label{eq:mtzB2}
+\end{align}
+(Para fixar o início)
+\begin{equation}
+u_i \le |V|\,(1-s_i)\qquad \forall i\in V.
+\end{equation}
+
+\paragraph{Dias como decisão}
+\begin{align}
+d_i &\le d^{max}_i\, y_i \qquad \forall i\in V, \label{eq:daysB1}\\
+d_i &\ge d^{min}_i\, y_i \qquad \forall i\in V. \label{eq:daysB2}
+\end{align}
+
+\paragraph{Dias inteiros contados}
+\begin{align}
+    dias_{i} \geq d_{i}\qquad \forall i\in V. 
+\end{align}
+
+\paragraph{Total de dias}
+\begin{equation}
+\sum_{i\in V} d_i = D
+\quad\text{(e)}\quad
+0 \le d_i \le D^{max}.
+\end{equation}
+
+\paragraph{Sequenciamento com horário de partida e chegada}
+o tempo de permanência na cidade $i$ é dado como:
+\begin{equation}
+S_i = \tau\, d_i \qquad \forall i\in V.
+\end{equation}
+
+Para todo $i,j\in V$ com $i\neq j$ e todo voo $f\in F_{i,j}$:
+\begin{align}
+t_i + S_i &\le \mathrm{DEP}_{i,j,f} + M\,(1-x_{i,j,f}), \label{eq:seqB1}\\
+t_j &\ge \mathrm{DEP}_{i,j,f} + \mathrm{DUR}_{i,j,f} - M\,(1-x_{i,j,f}). \label{eq:seqB2}
+\end{align}
+
+\paragraph{Fixação do início }
+Fixar o instante inicial como $0$ na cidade inicial:
+\begin{equation}
+t_i \le M\,(1-s_i)\qquad \forall i\in V,
+\end{equation}
+fazendo $t_i \approx 0$ para a cidade com $s_i=1$.
+
+\end{document}
+
