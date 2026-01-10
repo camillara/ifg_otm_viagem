@@ -1,0 +1,122 @@
+{
+  "custos": {
+    "alimentacao": 940.1,
+    "hospedagem": 1938.32,
+    "total": 2878.42,
+    "transporte": 0.0,
+    "voos": 0.0
+  },
+  "detalhes": {
+    "alimentacao": [
+      {
+        "cidade": "GYN",
+        "custo_dia": 60.0,
+        "diarias": 2,
+        "total": 120.0
+      },
+      {
+        "cidade": "GRU",
+        "custo_dia": 90.5,
+        "diarias": 3,
+        "total": 271.5
+      },
+      {
+        "cidade": "ATL",
+        "custo_dia": 274.3,
+        "diarias": 2,
+        "total": 548.6
+      }
+    ],
+    "hospedagem": [
+      {
+        "cidade": "GYN",
+        "diaria": 70.0,
+        "diarias": 2,
+        "total": 140.0
+      },
+      {
+        "cidade": "GRU",
+        "diaria": 147.0,
+        "diarias": 3,
+        "total": 441.0
+      },
+      {
+        "cidade": "ATL",
+        "diaria": 678.66,
+        "diarias": 2,
+        "total": 1357.32
+      }
+    ],
+    "transporte": [
+      {
+        "cidade": "GYN",
+        "custo_dia": 0.0,
+        "diarias": 2,
+        "total": 0.0
+      },
+      {
+        "cidade": "GRU",
+        "custo_dia": 0.0,
+        "diarias": 3,
+        "total": 0.0
+      },
+      {
+        "cidade": "ATL",
+        "custo_dia": 0.0,
+        "diarias": 2,
+        "total": 0.0
+      }
+    ]
+  },
+  "rota": {
+    "caminho": [
+      "GYN",
+      "GRU",
+      "JFK",
+      "ATL"
+    ],
+    "destino": "RIO",
+    "origem": "GYN",
+    "trechos": [
+      {
+        "destino": "GRU",
+        "origem": "GYN",
+        "voo": {
+          "cia": "",
+          "codigo": "",
+          "data": "",
+          "duracao_min": null,
+          "id": "G31497_2026_03_07_06:15",
+          "preco": 0.0,
+          "saida": ""
+        }
+      },
+      {
+        "destino": "JFK",
+        "origem": "GRU",
+        "voo": {
+          "cia": "",
+          "codigo": "",
+          "data": "",
+          "duracao_min": null,
+          "id": "AV248_2026_03_12_01:20",
+          "preco": 0.0,
+          "saida": ""
+        }
+      },
+      {
+        "destino": "ATL",
+        "origem": "JFK",
+        "voo": {
+          "cia": "",
+          "codigo": "",
+          "data": "",
+          "duracao_min": null,
+          "id": "F94817_2026_03_16_06:00",
+          "preco": 0.0,
+          "saida": ""
+        }
+      }
+    ]
+  }
+}
