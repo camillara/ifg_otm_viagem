@@ -5,3 +5,6 @@
 .idea/modules.xml
 .idea/vcs.xml
 .idea/inspectionProfiles/profiles_settings.xml
+__pycache__/api.cpython-314.pyc
+__pycache__/import_export_json.cpython-314.pyc
+__pycache__/otm_model.cpython-314.pyc
