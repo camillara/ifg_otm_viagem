@@ -8,3 +8,26 @@
 __pycache__/api.cpython-314.pyc
 __pycache__/import_export_json.cpython-314.pyc
 __pycache__/otm_model.cpython-314.pyc
+
+# =========================
+# Virtual Environments
+# =========================
+.venv/
+venv/
+env/
+ENV/
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+# =========================
+# Python
+# =========================
+__pycache__/
