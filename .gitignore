@@ -31,3 +31,7 @@ ENV/
 # Python
 # =========================
 __pycache__/
+
+# Crawler
+.env
+crawler/.env
