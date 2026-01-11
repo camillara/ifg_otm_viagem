@@ -3,11 +3,35 @@ import re
 from datetime import datetime
 
 
-def parse_db_to_model_inputs(json_path: str):
+def parse_db_to_model_inputs(json_path: str, user_start_date: str = None, validate_dates: bool = True):
     db = json.load(open(json_path, "r", encoding="utf-8"))
 
     # Tempo 0 do roteiro (em horas)
-    t0 = datetime.fromisoformat(db["metadata"]["inicio"])
+    # Usa data informada pelo usuário ou fallback para metadata
+    if user_start_date:
+        # Se o usuário passar apenas YYYY-MM-DD, adiciona hora padrão
+        t0_str = user_start_date if ' ' in user_start_date else f"{user_start_date} 00:00:00"
+        
+        # Validar se existem voos disponíveis para esta data
+        if validate_dates:
+            data_solicitada = user_start_date.split()[0] if ' ' in user_start_date else user_start_date
+            datas_disponiveis = sorted(set(a['data_voo'] for a in db['arestas']))
+            
+            if not datas_disponiveis:
+                raise ValueError("Nenhum voo disponível no banco de dados")
+            
+            data_min = datas_disponiveis[0]
+            data_max = datas_disponiveis[-1]
+            
+            if data_solicitada < data_min or data_solicitada > data_max:
+                raise ValueError(
+                    f"Data solicitada ({data_solicitada}) fora do intervalo disponível. "
+                    f"Voos disponíveis de {data_min} até {data_max}"
+                )
+    else:
+        t0_str = db["metadata"]["inicio"]
+    
+    t0 = datetime.fromisoformat(t0_str)
 
     # Nós / cidades
     V = list(db["nos"].keys())
@@ -40,6 +64,25 @@ def parse_db_to_model_inputs(json_path: str):
         C[(i, j, f)]   = float(a["custo_passagem"])
 
     return V, F, DEP, DUR, C, C_hotel, C_food, C_transfer
+
+
+def get_available_date_range(json_path: str):
+    """
+    Retorna o intervalo de datas disponíveis no banco de dados
+    
+    Returns:
+        dict com 'data_minima' e 'data_maxima'
+    """
+    db = json.load(open(json_path, "r", encoding="utf-8"))
+    datas_disponiveis = sorted(set(a['data_voo'] for a in db['arestas']))
+    
+    if not datas_disponiveis:
+        return {"data_minima": None, "data_maxima": None}
+    
+    return {
+        "data_minima": datas_disponiveis[0],
+        "data_maxima": datas_disponiveis[-1]
+    }
 
 
 def encontrar_voo(database, origem, destino, voo_id):

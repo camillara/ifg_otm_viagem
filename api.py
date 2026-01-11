@@ -7,7 +7,7 @@ import json
 import os
 
 from otm_model import build_trip_milp_pulp
-from import_export_json import parse_db_to_model_inputs, build_front_json_from_solution
+from import_export_json import parse_db_to_model_inputs, build_front_json_from_solution, get_available_date_range
 
 app = FastAPI(title="SmartTrip API", version="1.0.0")
 
@@ -46,6 +46,23 @@ def health_check():
     return {"status": "ok"}
 
 
+@app.get("/available-dates")
+def get_available_dates():
+    """Retorna o intervalo de datas disponíveis para viagens"""
+    if not os.path.exists(JSON_PATH):
+        raise HTTPException(status_code=500, detail="Database file not found")
+    
+    try:
+        date_range = get_available_date_range(JSON_PATH)
+        return {
+            "data_minima": date_range["data_minima"],
+            "data_maxima": date_range["data_maxima"],
+            "mensagem": f"Voos disponíveis de {date_range['data_minima']} até {date_range['data_maxima']}"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao obter datas: {str(e)}")
+
+
 @app.post("/optimize")
 def optimize_trip(request: TripRequest):
     if not os.path.exists(JSON_PATH):
@@ -53,7 +70,10 @@ def optimize_trip(request: TripRequest):
 
     # 1. Carrega dados do banco
     try:
-        V, F, DEP, DUR, C, C_hotel, C_food, C_transfer = parse_db_to_model_inputs(JSON_PATH)
+        V, F, DEP, DUR, C, C_hotel, C_food, C_transfer = parse_db_to_model_inputs(
+            JSON_PATH, 
+            user_start_date=request.data_ida
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error parsing database: {str(e)}")
 
